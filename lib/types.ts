@@ -39,6 +39,7 @@ export interface Post {
     authorId: string;
     author: User;
     createdAt: string;
+    updatedAt?: string;
     likes: number;
     replyToId?: string; // For nested replies
 }
