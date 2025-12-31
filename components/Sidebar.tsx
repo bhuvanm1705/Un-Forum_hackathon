@@ -24,9 +24,13 @@ import {
     Car,
     TrendingUp,
     Newspaper,
-    Smile
+    Smile,
+    Briefcase,
+    BookOpen,
+    HelpCircle,
+    MapPin
 } from 'lucide-react';
-import { useAuth } from '@/lib/auth';
+import { useAuth, useAdmin } from '@/lib/auth';
 import { AuthButton } from './AuthButton';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -44,7 +48,11 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
     Car,
     TrendingUp,
     Newspaper,
-    Smile
+    Smile,
+    Briefcase,
+    BookOpen,
+    HelpCircle,
+    MapPin
 };
 
 // ... imports
@@ -52,6 +60,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 export function Sidebar({ className, onLinkClick }: { className?: string, onLinkClick?: () => void }) {
     const pathname = usePathname();
     const { user, loading } = useAuth();
+    const { isAdmin } = useAdmin(); // Use the hook!
 
     return (
         <div className={cn("w-64 border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 h-screen flex flex-col fixed top-0 left-0 bottom-0 z-50 overflow-y-auto simple-scroller transition-transform duration-300 ease-in-out", className)}>
@@ -98,6 +107,19 @@ export function Sidebar({ className, onLinkClick }: { className?: string, onLink
                             <Search className="mr-2 h-4 w-4" />
                             Search
                         </Link>
+                        {isAdmin && (
+                            <Link
+                                href="/tools"
+                                onClick={onLinkClick}
+                                className={cn(
+                                    buttonVariants({ variant: pathname === '/tools' ? 'secondary' : 'ghost' }),
+                                    "w-full justify-start"
+                                )}
+                            >
+                                <Settings className="mr-2 h-4 w-4" />
+                                Tools & Migration
+                            </Link>
+                        )}
                     </div>
                 </div>
                 <div className="px-3 py-2">

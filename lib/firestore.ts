@@ -228,6 +228,132 @@ export async function getPostsByThreadIdFromFirestore(threadId: string): Promise
     }
 }
 
+
+export async function seedUnForumDataInFirestore() {
+    try {
+        const timestamp = Timestamp.now();
+        console.log("Starting batch seed of 50 threads...");
+
+        // 1. JOBS (10 items)
+        const jobTitles = ["Senior React Dev", "Product Designer", "Go Backend Engineer", "DevOps Specialist", "Founding Engineer", "Intern", "CTO", "Mobile Dev (Flutter)", "QA Engineer", "Tech Lead"];
+        for (let i = 0; i < 10; i++) {
+            await addDoc(collection(db, 'threads'), {
+                title: jobTitles[i],
+                content: `We are hiring a ${jobTitles[i]} to join our remote team. Experience with Next.js and Tailwind is a plus. Apply now!`,
+                authorId: 'recruiter_bot',
+                author: { id: 'recruiter_bot', name: 'TechHiring Bot', avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=job${i}`, role: 'moderator' },
+                categoryId: 'c11',
+                category: { id: 'c11', name: 'Job Board', slug: 'jobs', type: 'job' },
+                likes: Math.floor(Math.random() * 50),
+                replyCount: 0,
+                viewCount: Math.floor(Math.random() * 200),
+                createdAt: timestamp,
+                updatedAt: timestamp,
+                tags: ['hiring', 'remote', 'job']
+            });
+        }
+
+        // 2. STORIES (10 items)
+        const storyTitles = ["The Last Byte", "Cyberpunk 2099", "The Glitch", "Echoes of Ai", "Mars Colony", "The Infinite Loop", "Binary Heart", "Silicon Soul", "Digital Ghost", "The Firewall"];
+        for (let i = 0; i < 10; i++) {
+            const threadRef = await addDoc(collection(db, 'threads'), {
+                title: storyTitles[i],
+                content: `Chapter 1: The beginning of ${storyTitles[i]}... It was a dark and stormy night in the server room.`,
+                authorId: `writer_${i}`,
+                author: { id: `writer_${i}`, name: `StoryTeller${i}`, avatar: `https://api.dicebear.com/7.x/notionists/svg?seed=story${i}`, role: 'user' },
+                categoryId: 'c12',
+                category: { id: 'c12', name: 'Collaborative Stories', slug: 'stories', type: 'story' },
+                likes: Math.floor(Math.random() * 100),
+                replyCount: 3,
+                viewCount: Math.floor(Math.random() * 500),
+                createdAt: timestamp,
+                updatedAt: timestamp,
+                tags: ['fiction', 'collab']
+            });
+            // Add chapters
+            for (let j = 0; j < 3; j++) {
+                await addDoc(collection(db, 'posts'), {
+                    threadId: threadRef.id,
+                    content: `Chapter ${j + 2}: The plot thickens...`,
+                    authorId: 'contributor',
+                    author: { id: 'contributor', name: `CoAuthor ${j}`, avatar: '', role: 'user' },
+                    likes: 5, createdAt: timestamp, updatedAt: timestamp
+                });
+            }
+        }
+
+        // 3. QA (10 items)
+        const qaTitles = ["Center a Div?", "React vs Vue?", "Next.js 14 Server Actions", "TypeScript Generic Help", "CSS Grid vs Flexbox", "Deploy to Vercel", "Firebase Rules", "State Management", "useEffect Loop", "API Routes"];
+        for (let i = 0; i < 10; i++) {
+            const threadRef = await addDoc(collection(db, 'threads'), {
+                title: qaTitles[i],
+                content: `I am stuck with ${qaTitles[i]}. Can someone explain the best practice?`,
+                authorId: `dev_${i}`,
+                author: { id: `dev_${i}`, name: `DevUser${i}`, avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=dev${i}`, role: 'user' },
+                categoryId: 'c13',
+                category: { id: 'c13', name: 'Dev Q&A', slug: 'qa', type: 'qa' },
+                likes: Math.floor(Math.random() * 20),
+                replyCount: 1,
+                viewCount: Math.floor(Math.random() * 100),
+                createdAt: timestamp,
+                updatedAt: timestamp,
+                tags: ['help', 'code']
+            });
+            await addDoc(collection(db, 'posts'), {
+                threadId: threadRef.id,
+                content: `Here is the solution: Use the latest docs.`,
+                authorId: 'expert',
+                author: { id: 'expert', name: `StackOverflowPro`, avatar: '', role: 'user' },
+                likes: 10, createdAt: timestamp, updatedAt: timestamp
+            });
+        }
+
+        // 4. ROADMAP (10 items)
+        const features = ["Dark Mode", "Mobile App", "API Access", "SSO Login", "File Uploads", "Rich Text Editor", "Notifications", "User Profiles", "Search", "Analytics"];
+        for (let i = 0; i < 10; i++) {
+            await addDoc(collection(db, 'threads'), {
+                title: `Feature Request: ${features[i]}`,
+                content: `We really need ${features[i]} for our workflow.`,
+                authorId: `pm_${i}`,
+                author: { id: `pm_${i}`, name: `ProductManager${i}`, avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=pm${i}`, role: 'user' },
+                categoryId: 'c14',
+                category: { id: 'c14', name: 'Product Roadmap', slug: 'roadmap', type: 'roadmap' },
+                likes: Math.floor(Math.random() * 200),
+                replyCount: 0,
+                viewCount: Math.floor(Math.random() * 300),
+                createdAt: timestamp,
+                updatedAt: timestamp,
+                tags: ['feature', 'planned']
+            });
+        }
+
+        // 5. GENERAL (10 items)
+        const generalTopics = ["Introductions", "Random Thoughts", "Music Recommendations", "Movie Reviews", "Gaming", "Weekend Plans", "Coding Setups", "Coffee vs Tea", "Remote Work Tips", "Showcase"];
+        for (let i = 0; i < 10; i++) {
+            await addDoc(collection(db, 'threads'), {
+                title: generalTopics[i],
+                content: `Let's talk about ${generalTopics[i]}. What do you think?`,
+                authorId: `user_${i}`,
+                author: { id: `user_${i}`, name: `CommunityMember${i}`, avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=gen${i}`, role: 'user' },
+                categoryId: 'c1', // Using Films/General category
+                category: { id: 'c1', name: 'General', slug: 'general', type: 'forum' },
+                likes: Math.floor(Math.random() * 30),
+                replyCount: 0,
+                viewCount: Math.floor(Math.random() * 50),
+                createdAt: timestamp,
+                updatedAt: timestamp,
+                tags: ['chat']
+            });
+        }
+
+        console.log("Seeded 50 threads (10 per category)!");
+        return true;
+    } catch (error) {
+        console.error("Error seeding Un-Forum data:", error);
+        return false;
+    }
+}
+
 export async function deleteAllDataInFirestore() {
     try {
         const threadsSnap = await getDocs(collection(db, 'threads'));

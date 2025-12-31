@@ -8,9 +8,10 @@ import { useRouter } from 'next/navigation';
 
 interface ReplyFormProps {
     threadId: string;
+    placeholder?: string;
 }
 
-export function ReplyForm({ threadId }: ReplyFormProps) {
+export function ReplyForm({ threadId, placeholder = "Type your reply here..." }: ReplyFormProps) {
     const [content, setContent] = useState('');
     const [loading, setLoading] = useState(false);
     const { user } = useAuth();
@@ -59,7 +60,7 @@ export function ReplyForm({ threadId }: ReplyFormProps) {
             <div className="flex-1 space-y-2">
                 <textarea
                     className="w-full min-h-[100px] rounded-md border border-zinc-200 bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:focus-visible:ring-zinc-300"
-                    placeholder="Type your reply here..."
+                    placeholder={placeholder}
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     disabled={loading}

@@ -12,6 +12,7 @@ export interface Category {
     slug: string;
     description: string;
     icon?: string;
+    type?: 'forum' | 'job' | 'story' | 'qa' | 'roadmap';
     threadCount: number;
 }
 

@@ -106,6 +106,43 @@ export const CATEGORIES: Category[] = [
         description: 'Desi memes and lighthearted fun.',
         icon: 'Smile',
         threadCount: 999
+    },
+    // Creative Misuse Categories
+    {
+        id: 'c11',
+        name: 'Job Board',
+        slug: 'jobs',
+        description: 'Find your next role. Posts = Job Listings.',
+        icon: 'Briefcase',
+        type: 'job',
+        threadCount: 12
+    },
+    {
+        id: 'c12',
+        name: 'Collaborative Stories',
+        slug: 'stories',
+        description: 'Write together. Threads = Books, Posts = Chapters.',
+        icon: 'BookOpen',
+        type: 'story',
+        threadCount: 5
+    },
+    {
+        id: 'c13',
+        name: 'Dev Q&A',
+        slug: 'qa',
+        description: 'Get help. Threads = Questions, Posts = Answers.',
+        icon: 'HelpCircle',
+        type: 'qa',
+        threadCount: 342
+    },
+    {
+        id: 'c14',
+        name: 'Product Roadmap',
+        slug: 'roadmap',
+        description: 'See what is next. Threads = Features.',
+        icon: 'MapPin',
+        type: 'roadmap',
+        threadCount: 8
     }
 ];
 

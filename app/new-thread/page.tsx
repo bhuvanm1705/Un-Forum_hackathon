@@ -8,15 +8,16 @@ import { seedPopularThreads } from '@/lib/data';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/lib/auth';
+import { useAuth, useAdmin } from '@/lib/auth';
 
 export default function NewThreadPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [seeding, setSeeding] = useState(false); // Add seeding state
     const { user } = useAuth();
+    const { isAdmin } = useAdmin();
     const [isAnonymous, setIsAnonymous] = useState(false);
 
     async function handleSeed() {
@@ -108,25 +109,49 @@ export default function NewThreadPage() {
                     Back to Feed
                 </Link>
                 <div className="flex justify-between items-center">
-                    <h1 className="text-3xl font-bold tracking-tight">Start a New Discussion</h1>
-                    <div className="flex gap-2">
-                        <Button
-                            variant="destructive"
-                            type="button"
-                            onClick={handleReset}
-                            disabled={seeding}
-                        >
-                            Reset DB
-                        </Button>
-                        <Button
-                            variant="outline"
-                            type="button"
-                            onClick={handleSeed}
-                            disabled={seeding}
-                        >
-                            {seeding ? 'Processing...' : '⚡ Seed Popular Data'}
-                        </Button>
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight">Start a New Discussion</h1>
                     </div>
+                    {isAdmin && (
+                        <div className="flex gap-2">
+                            <Button
+                                variant="destructive"
+                                type="button"
+                                onClick={handleReset}
+                                disabled={seeding}
+                            >
+                                Reset DB
+                            </Button>
+                            <Button
+                                variant="outline"
+                                type="button"
+                                onClick={handleSeed}
+                                disabled={seeding}
+                            >
+                                {seeding ? 'Processing...' : '⚡ Seed Popular Data'}
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                type="button"
+                                onClick={async () => {
+                                    if (!confirm("Add 50 Un-Forum examples (10 Job, 10 Story, 10 QA...) to database?")) return;
+                                    setSeeding(true);
+                                    const { seedUnForumDataInFirestore } = await import('@/lib/firestore');
+                                    const success = await seedUnForumDataInFirestore();
+                                    if (success) {
+                                        router.push('/');
+                                        router.refresh();
+                                    } else {
+                                        alert('Failed to seed Un-Forum data');
+                                    }
+                                    setSeeding(false);
+                                }}
+                                disabled={seeding}
+                            >
+                                {seeding ? 'Seeding...' : '🚀 Seed 50 Threads'}
+                            </Button>
+                        </div>
+                    )}
                 </div>
                 <p className="text-muted-foreground">
                     Share your thoughts, ask questions, or showcase your work.
