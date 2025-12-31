@@ -47,14 +47,16 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
     Smile
 };
 
-export function Sidebar({ className }: { className?: string }) {
+// ... imports
+
+export function Sidebar({ className, onLinkClick }: { className?: string, onLinkClick?: () => void }) {
     const pathname = usePathname();
     const { user, loading } = useAuth();
 
     return (
-        <div className={cn("w-64 border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 h-screen flex flex-col fixed top-0 left-0 bottom-0 z-50 overflow-y-auto simple-scroller", className)}>
+        <div className={cn("w-64 border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 h-screen flex flex-col fixed top-0 left-0 bottom-0 z-50 overflow-y-auto simple-scroller transition-transform duration-300 ease-in-out", className)}>
             <div className="flex h-14 items-center border-b border-zinc-200 px-6 dark:border-zinc-800 shrink-0">
-                <Link href="/" className="flex items-center gap-2 font-bold text-lg text-zinc-900 dark:text-zinc-50">
+                <Link href="/" className="flex items-center gap-2 font-bold text-lg text-zinc-900 dark:text-zinc-50" onClick={onLinkClick}>
                     <span>Foru.ms</span>
                 </Link>
             </div>
@@ -65,6 +67,7 @@ export function Sidebar({ className }: { className?: string }) {
                     <div className="space-y-1">
                         <Link
                             href="/"
+                            onClick={onLinkClick}
                             className={cn(
                                 buttonVariants({ variant: pathname === '/' ? 'secondary' : 'ghost' }),
                                 "w-full justify-start"
@@ -75,6 +78,7 @@ export function Sidebar({ className }: { className?: string }) {
                         </Link>
                         <Link
                             href="/your-threads"
+                            onClick={onLinkClick}
                             className={cn(
                                 buttonVariants({ variant: pathname === '/your-threads' ? 'secondary' : 'ghost' }),
                                 "w-full justify-start"
@@ -85,6 +89,7 @@ export function Sidebar({ className }: { className?: string }) {
                         </Link>
                         <Link
                             href="/search"
+                            onClick={onLinkClick}
                             className={cn(
                                 buttonVariants({ variant: pathname === '/search' ? 'secondary' : 'ghost' }),
                                 "w-full justify-start"
@@ -106,6 +111,7 @@ export function Sidebar({ className }: { className?: string }) {
                                 <Link
                                     key={category.id}
                                     href={`/category/${category.slug}`}
+                                    onClick={onLinkClick}
                                     className={cn(
                                         buttonVariants({ variant: pathname === (`/category/${category.slug}`) ? 'secondary' : 'ghost' }),
                                         "w-full justify-start"
@@ -122,7 +128,7 @@ export function Sidebar({ className }: { className?: string }) {
 
             {/* Fixed New Thread Button */}
             <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 shrink-0">
-                <Link href="/new-thread" className={cn(buttonVariants({ variant: 'default' }), "w-full bg-blue-600 hover:bg-blue-700 text-white")}>
+                <Link href="/new-thread" onClick={onLinkClick} className={cn(buttonVariants({ variant: 'default' }), "w-full bg-blue-600 hover:bg-blue-700 text-white")}>
                     <Plus className="mr-2 h-4 w-4" />
                     New Thread
                 </Link>

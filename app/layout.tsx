@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Sidebar } from '@/components/Sidebar';
+import { MobileNav } from '@/components/MobileNav';
 import { cn } from '@/lib/utils';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -10,7 +11,6 @@ export const metadata: Metadata = {
   title: 'Foru.ms x v0 Hackathon',
   description: 'A blazing fast forum template.',
 };
-
 export default function RootLayout({
   children,
 }: {
@@ -22,7 +22,8 @@ export default function RootLayout({
         <div className="flex min-h-screen">
           <Sidebar className="w-64 fixed hidden md:block" />
           <div className="flex-1 md:ml-64">
-            <main className="container max-w-4xl py-6 lg:px-8 px-4">
+            <MobileNav />
+            <main className="container max-w-4xl py-6 pt-20 md:pt-6 lg:px-8 px-4">
               {children}
             </main>
           </div>
