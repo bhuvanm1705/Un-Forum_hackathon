@@ -3,12 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription }
 import Link from 'next/link';
 import { MessageSquare, Heart, Eye } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { DeleteThreadButton } from './DeleteThreadButton';
 
 interface ThreadListProps {
     threads: Thread[];
+    allowDelete?: boolean;
 }
 
-export function ThreadList({ threads }: ThreadListProps) {
+export function ThreadList({ threads, allowDelete }: ThreadListProps) {
     return (
         <div className="space-y-4">
             {threads.map((thread) => (
@@ -23,6 +25,9 @@ export function ThreadList({ threads }: ThreadListProps) {
                                     {thread.content}
                                 </CardDescription>
                             </div>
+                            {allowDelete && (
+                                <DeleteThreadButton threadId={thread.id} authorId={thread.authorId} />
+                            )}
                         </div>
                     </CardHeader>
                     <CardContent className="pb-2">

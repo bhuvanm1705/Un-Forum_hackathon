@@ -4,6 +4,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CATEGORIES } from '@/lib/data';
 import { createThreadInFirestore } from '@/lib/firestore'; // Import the function
+import { seedPopularThreads } from '@/lib/data';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -14,8 +15,33 @@ import { useAuth } from '@/lib/auth';
 export default function NewThreadPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [seeding, setSeeding] = useState(false); // Add seeding state
     const { user } = useAuth();
     const [isAnonymous, setIsAnonymous] = useState(false);
+
+    async function handleSeed() {
+        if (!confirm("Add 10 dummy popular threads to database?")) return;
+        setSeeding(true);
+        const { seedPopularThreads } = await import('@/lib/data');
+        const success = await seedPopularThreads();
+        if (success) {
+            router.push('/');
+            router.refresh(); // Refresh to see changes
+        } else {
+            alert('Failed to seed data');
+        }
+        setSeeding(false);
+    }
+
+    async function handleReset() {
+        if (!confirm("Are you sure? This will delete ALL threads and posts.")) return;
+        setSeeding(true);
+        // We need to import this dynamically or expose it in lib/data
+        const { deleteAllDataInFirestore } = await import('@/lib/firestore');
+        await deleteAllDataInFirestore();
+        alert('Database cleared!');
+        setSeeding(false);
+    }
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -81,11 +107,32 @@ export default function NewThreadPage() {
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back to Feed
                 </Link>
-                <h1 className="text-3xl font-bold tracking-tight">Start a New Discussion</h1>
+                <div className="flex justify-between items-center">
+                    <h1 className="text-3xl font-bold tracking-tight">Start a New Discussion</h1>
+                    <div className="flex gap-2">
+                        <Button
+                            variant="destructive"
+                            type="button"
+                            onClick={handleReset}
+                            disabled={seeding}
+                        >
+                            Reset DB
+                        </Button>
+                        <Button
+                            variant="outline"
+                            type="button"
+                            onClick={handleSeed}
+                            disabled={seeding}
+                        >
+                            {seeding ? 'Processing...' : '⚡ Seed Popular Data'}
+                        </Button>
+                    </div>
+                </div>
                 <p className="text-muted-foreground">
                     Share your thoughts, ask questions, or showcase your work.
                 </p>
             </div>
+
 
             <form className="space-y-6" onSubmit={onSubmit}>
                 <div className="space-y-2">

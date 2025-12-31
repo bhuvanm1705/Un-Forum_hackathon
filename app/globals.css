@@ -24,3 +24,67 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Scrollbar Visibility Fix */
+/* Global Scrollbar Theme */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d4d4d8;
+  /* Zinc-300 for light mode default */
+  border-radius: 6px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a1a1aa;
+}
+
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-thumb {
+    background-color: #52525b;
+    /* Zinc-600 */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #71717a;
+  }
+}
+
+/* Simple High Contrast Scroller */
+.simple-scroller {
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff #27272a;
+  /* White thumb, Dark track */
+}
+
+.simple-scroller::-webkit-scrollbar {
+  width: 10px;
+  display: block;
+  /* Always show */
+}
+
+.simple-scroller::-webkit-scrollbar-track {
+  background: #27272a;
+  /* Zinc-800 track */
+}
+
+.simple-scroller::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+  /* White thumb */
+  border-radius: 5px;
+  border: 2px solid #27272a;
+  /* Border matches track for padding look */
+}
+
+.simple-scroller::-webkit-scrollbar-thumb:hover {
+  background-color: #d4d4d8;
+  /* Light grey hover */
+}

@@ -3,8 +3,15 @@ import { getThreads } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Sparkles } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
-  const threads = await getThreads();
+  let threads = await getThreads();
+
+  // Strict filtering for "Popular Threads" as requested (Adjusted for new 25 comment requirement)
+  threads = threads
+    .filter(t => t.likes > 50 && t.replyCount >= 20 && t.viewCount > 100)
+    .slice(0, 10);
 
   return (
     <div className="space-y-6">

@@ -182,7 +182,7 @@ export const POSTS: Post[] = [
 ];
 
 // --- Simulation Helpers ---
-import { getThreadsFromFirestore, getThreadByIdFromFirestore } from './firestore';
+import { getThreadsFromFirestore, getThreadByIdFromFirestore, getPostsByThreadIdFromFirestore, deleteThreadInFirestore, getThreadsByAuthorFromFirestore } from './firestore';
 
 // Toggle this to true to use Firebase (requires .env configuration)
 const USE_FIREBASE = true;
@@ -204,7 +204,31 @@ export async function getThreadById(id: string) {
 }
 
 export async function getPostsByThreadId(threadId: string) {
-    // TODO: Add Firestore implementation for posts
+    if (USE_FIREBASE) {
+        return await getPostsByThreadIdFromFirestore(threadId);
+    }
     await new Promise((resolve) => setTimeout(resolve, 500));
     return POSTS.filter((p) => p.threadId === threadId);
+}
+
+export async function deleteThread(threadId: string) {
+    if (USE_FIREBASE) {
+        return await deleteThreadInFirestore(threadId);
+    }
+    // Mock deletion not implemented
+}
+
+export async function getThreadsByAuthor(authorId: string) {
+    if (USE_FIREBASE) {
+        return await getThreadsByAuthorFromFirestore(authorId);
+    }
+    return THREADS.filter(t => t.authorId === authorId);
+}
+
+export async function seedPopularThreads() {
+    if (USE_FIREBASE) {
+        const { seedPopularThreadsInFirestore } = await import('./firestore');
+        return await seedPopularThreadsInFirestore();
+    }
+    return false;
 }
