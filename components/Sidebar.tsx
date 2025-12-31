@@ -52,13 +52,15 @@ export function Sidebar({ className }: { className?: string }) {
     const { user, loading } = useAuth();
 
     return (
-        <div className={cn("w-64 border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 min-h-screen flex flex-col fixed top-0 left-0 bottom-0 z-50", className)}>
-            <div className="flex h-14 items-center border-b border-zinc-200 px-6 dark:border-zinc-800">
+        <div className={cn("w-64 border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 h-screen flex flex-col fixed top-0 left-0 bottom-0 z-50", className)}>
+            <div className="flex h-14 items-center border-b border-zinc-200 px-6 dark:border-zinc-800 shrink-0">
                 <Link href="/" className="flex items-center gap-2 font-bold text-lg text-zinc-900 dark:text-zinc-50">
                     <span>Foru.ms</span>
                 </Link>
             </div>
-            <div className="flex-1 overflow-auto py-4">
+
+            {/* Scrollable Main Content */}
+            <div className="flex-1 overflow-y-auto py-4 min-h-0">
                 <div className="px-3 py-2">
                     <div className="space-y-1">
                         <Link
@@ -106,16 +108,18 @@ export function Sidebar({ className }: { className?: string }) {
                         })}
                     </div>
                 </div>
-                <div className="px-3 py-2">
-                    <Link href="/new-thread" className={cn(buttonVariants({ variant: 'default' }), "w-full bg-blue-600 hover:bg-blue-700 text-white")}>
-                        <Plus className="mr-2 h-4 w-4" />
-                        New Thread
-                    </Link>
-                </div>
             </div>
 
-            {/* User Profile Section */}
-            <div className="auth-section mt-auto absolute bottom-0 w-full bg-zinc-50 dark:bg-zinc-900 p-4 border-t border-zinc-200 dark:border-zinc-800">
+            {/* Fixed New Thread Button */}
+            <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 shrink-0">
+                <Link href="/new-thread" className={cn(buttonVariants({ variant: 'default' }), "w-full bg-blue-600 hover:bg-blue-700 text-white")}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    New Thread
+                </Link>
+            </div>
+
+            {/* Fixed User Profile Section */}
+            <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 shrink-0">
                 {!loading && user ? (
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 overflow-hidden">
